@@ -1,7 +1,10 @@
 package com.optionAlgo.dao.impl;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,12 +13,15 @@ import javax.persistence.Query;
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.optionAlgo.dao.MasterDao;
 import com.optionAlgo.entity.Article;
 import com.optionAlgo.entity.Expiry;
+import com.optionAlgo.entity.OptionBean;
 import com.optionAlgo.form.data.FutureDetailsFormDto;
 import com.optionAlgo.form.data.FutureScripFormData;
+import com.optionAlgo.form.data.OptionPriceDetailFormDto;
 import com.optionAlgo.form.data.OptionPriceFormDto;
 
 
@@ -75,7 +81,7 @@ public class MasterDaoImpl implements MasterDao {
 			
 			fDetailDto = new FutureDetailsFormDto();
 			fDetailDto.setFuturePrice(Double.parseDouble(obj[index++].toString()));
-			fDetailDto.setExpirdate(obj[index++].toString());
+			fDetailDto.setExpiryDate(obj[index++].toString());
 			fDetailDto.setIv(Double.parseDouble(obj[index++].toString()));
 			fDetailDto.setIvp(Double.parseDouble(obj[index++].toString()));
 			fDetailDto.setChangeInOi(Double.parseDouble(obj[index++].toString()));
@@ -83,8 +89,9 @@ public class MasterDaoImpl implements MasterDao {
 			Double lotsize = Double.parseDouble(obj[index++].toString());
 			
 			fDetailDto.setLotSize(lotsize.intValue());
-			futureDetailsFormDtoMap.put(fDetailDto.getExpirdate(), fDetailDto);
-			
+			List<OptionPriceFormDto> optionPriceList = getOptionPriceDataForAllStrikeByExpiry(scripName,fDetailDto.getExpiryDate());
+			fDetailDto.setOptionPricesList(optionPriceList);
+			futureDetailsFormDtoMap.put(fDetailDto.getExpiryDate(), fDetailDto);
 			index=0;
 		}
 		
@@ -96,38 +103,44 @@ public class MasterDaoImpl implements MasterDao {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public LinkedHashMap<String, OptionPriceFormDto> getOptionPriceDataForAllStrikeByExpiry(String scripName, String expiryDate) {
+	public List<OptionPriceFormDto> getOptionPriceDataForAllStrikeByExpiry(String scripName, String expiryDate) {
 		
-		Query query = entityManager.createNativeQuery("select ltp, expirydate,iv, ivp,"
-				+ "	 percentChangeInOi, spotPrice, lotSize from futurescrip where scripName ='" +scripName+"'");
+		LinkedHashMap<String,OptionPriceFormDto > optionPricesMap; 
+		
+		Query query = entityManager.createNativeQuery("select strikePrice, iv, ltp, optionType FROM OptionBean as ob where ob.seriesName ='"+ 
+				expiryDate+"' and ob.scripName='"+scripName+"' ORDER BY ob.strikePrice");
 		
 		
-		FutureScripFormData fs = new FutureScripFormData();	
-		List<Object[]> scipExpiryList = query.getResultList();
-		LinkedHashMap<String , FutureDetailsFormDto>futureDetailsFormDtoMap = new LinkedHashMap<>();
-		FutureDetailsFormDto fDetailDto ;
+		List<Object[]> optionBeanForExpiryList = query.getResultList();
+		HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap;
 		int index=0;
+		OptionPriceFormDto opDto;
+		
+		Map<Double, OptionPriceFormDto> tempMap = new HashMap<>();
+		OptionPriceDetailFormDto opDetailDto;
+		String optionType;
+		Double strikePrice;
+		for(Object[] obj : optionBeanForExpiryList){
 			
-		for(Object[] obj : scipExpiryList){
+			opDetailDto = new OptionPriceDetailFormDto();
 			
-			fDetailDto = new FutureDetailsFormDto();
-			fDetailDto.setFuturePrice(Double.parseDouble(obj[index++].toString()));
-			fDetailDto.setExpirdate(obj[index++].toString());
-			fDetailDto.setIv(Double.parseDouble(obj[index++].toString()));
-			fDetailDto.setIvp(Double.parseDouble(obj[index++].toString()));
-			fDetailDto.setChangeInOi(Double.parseDouble(obj[index++].toString()));
-			fDetailDto.setSpotPrice(Double.parseDouble(obj[index++].toString()));
-			Double lotsize = Double.parseDouble(obj[index++].toString());
+			strikePrice = Double.parseDouble(obj[index++].toString());
+			opDto = tempMap.get(strikePrice);
+			if(opDto == null)
+				opDto= new OptionPriceFormDto();
 			
-			fDetailDto.setLotSize(lotsize.intValue());
-			futureDetailsFormDtoMap.put(fDetailDto.getExpirdate(), fDetailDto);
+			opDto.setStrike(strikePrice);
 			
+			opDetailDto.setIv(Double.parseDouble(obj[index++].toString()));
+			opDetailDto.setPrice(Double.parseDouble(obj[index++].toString()));
+			optionType =obj[index++].toString();
+			
+			opDto.getOptionTypePriceMap().put(optionType, opDetailDto);
 			index=0;
+			tempMap.put(strikePrice, opDto);
 		}
 		
-		fs.setFutureAllExpiryMap(futureDetailsFormDtoMap);
-		fs.setScripName(scripName);
-		return fs;
+		return new ArrayList<OptionPriceFormDto>(tempMap.values()); 
 	}
 	
 	/*@Override

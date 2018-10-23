@@ -23,12 +23,11 @@ public class OptionBean {
 	Double askPrice;
 	Double askQty;
 	Double strikePrice;
-	Double spotPrice;
+	Double cmp;
 	
 	String scripName;
-	String expiryDate;
-	
-	
+	String seriesName; 
+	String optionType;
 	public int getId() {
 		return id;
 	}
@@ -101,11 +100,11 @@ public class OptionBean {
 	public void setStrikePrice(Double strikePrice) {
 		this.strikePrice = strikePrice;
 	}
-	public Double getSpotPrice() {
-		return spotPrice;
+	public Double getCmp() {
+		return cmp;
 	}
-	public void setSpotPrice(Double spotPrice) {
-		this.spotPrice = spotPrice;
+	public void setCmp(Double cmp) {
+		this.cmp = cmp;
 	}
 	public String getScripName() {
 		return scripName;
@@ -113,13 +112,19 @@ public class OptionBean {
 	public void setScripName(String scripName) {
 		this.scripName = scripName;
 	}
-	public String getExpiryDate() {
-		return expiryDate;
+	public String getSeriesName() {
+		return seriesName;
 	}
-	public void setExpiryDate(String expiryDate) {
-		this.expiryDate = expiryDate;
+	public void setSeriesName(String seriesName) {
+		this.seriesName = seriesName;
 	}
-	
+	public String getOptionType() {
+		return optionType;
+	}
+	public void setOptionType(String optionType) {
+		this.optionType = optionType;
+	}
+
 	
 		
 	

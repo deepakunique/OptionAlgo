@@ -1,6 +1,7 @@
 package com.optionAlgo.form.data;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
@@ -9,19 +10,24 @@ import lombok.Data;
 public class FutureDetailsFormDto {
 	
 	
-	String expirdate;
+	String expiryDate;
 	Double spotPrice;
 	Double futurePrice;
 	Integer lotSize;
 	Double iv;
 	Double ivp;
 	Double changeInOi;
-	LinkedHashMap<String,OptionPriceFormDto > optionPricesMap;
-	public String getExpirdate() {
-		return expirdate;
+	List<OptionPriceFormDto> optionPricesList = new ArrayList<>();
+	
+	
+	
+	
+	
+	public String getExpiryDate() {
+		return expiryDate;
 	}
-	public void setExpirdate(String expirdate) {
-		this.expirdate = expirdate;
+	public void setExpiryDate(String expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 	public Double getSpotPrice() {
 		return spotPrice;
@@ -59,12 +65,13 @@ public class FutureDetailsFormDto {
 	public void setChangeInOi(Double changeInOi) {
 		this.changeInOi = changeInOi;
 	}
-	public LinkedHashMap<String, OptionPriceFormDto> getOptionPricesMap() {
-		return optionPricesMap;
+	public List<OptionPriceFormDto> getOptionPricesList() {
+		return optionPricesList;
 	}
-	public void setOptionPricesMap(LinkedHashMap<String, OptionPriceFormDto> optionPricesMap) {
-		this.optionPricesMap = optionPricesMap;
+	public void setOptionPricesList(List<OptionPriceFormDto> optionPricesList) {
+		this.optionPricesList = optionPricesList;
 	}
+	
 	
 	
 

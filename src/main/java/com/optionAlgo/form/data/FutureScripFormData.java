@@ -11,6 +11,12 @@ public class FutureScripFormData {
 	
 	String scripName;
 	LinkedHashMap<String, FutureDetailsFormDto> futureAllExpiryMap;
+	
+	
+	
+	
+	
+	
 	public String getScripName() {
 		return scripName;
 	}
