@@ -21,7 +21,6 @@ import com.optionAlgo.entity.Expiry;
 import com.optionAlgo.entity.OptionBean;
 import com.optionAlgo.form.data.FutureDetailsFormDto;
 import com.optionAlgo.form.data.FutureScripFormData;
-import com.optionAlgo.form.data.OptionPriceDetailFormDto;
 import com.optionAlgo.form.data.OptionPriceFormDto;
 
 
@@ -112,17 +111,17 @@ public class MasterDaoImpl implements MasterDao {
 		
 		
 		List<Object[]> optionBeanForExpiryList = query.getResultList();
-		HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap;
+		//HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap;
 		int index=0;
 		OptionPriceFormDto opDto;
 		
 		Map<Double, OptionPriceFormDto> tempMap = new HashMap<>();
-		OptionPriceDetailFormDto opDetailDto;
+		//OptionPriceDetailFormDto opDetailDto;
 		String optionType;
 		Double strikePrice;
 		for(Object[] obj : optionBeanForExpiryList){
 			
-			opDetailDto = new OptionPriceDetailFormDto();
+			//opDetailDto = new OptionPriceDetailFormDto();
 			
 			strikePrice = Double.parseDouble(obj[index++].toString());
 			opDto = tempMap.get(strikePrice);
@@ -131,11 +130,11 @@ public class MasterDaoImpl implements MasterDao {
 			
 			opDto.setStrike(strikePrice);
 			
-			opDetailDto.setIv(Double.parseDouble(obj[index++].toString()));
-			opDetailDto.setPrice(Double.parseDouble(obj[index++].toString()));
+			/*opDetailDto.setIv(Double.parseDouble(obj[index++].toString()));
+			opDetailDto.setPrice(Double.parseDouble(obj[index++].toString()));*/
 			optionType =obj[index++].toString();
 			
-			opDto.getOptionTypePriceMap().put(optionType, opDetailDto);
+			//opDto.getOptionTypePriceMap().put(optionType, opDetailDto);
 			index=0;
 			tempMap.put(strikePrice, opDto);
 		}
