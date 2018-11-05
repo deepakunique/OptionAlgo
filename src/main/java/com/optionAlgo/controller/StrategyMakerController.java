@@ -18,8 +18,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.optionAlgo.entity.Article;
 import com.optionAlgo.entity.Expiry;
 import com.optionAlgo.form.data.FutureScripFormData;
+import com.optionAlgo.form.data.PayOffResponseDto;
+import com.optionAlgo.form.data.PositionRequestFormDto;
+import com.optionAlgo.form.data.SystemStrategyRequestFormDto;
 import com.optionAlgo.service.IArticleService;
 import com.optionAlgo.service.MasterService;
+import com.optionAlgo.utility.SystemStrategyResponseFormDto;
 
 @Controller
 @RequestMapping("/master")
@@ -55,7 +59,20 @@ public class StrategyMakerController {
 	}
 	
 	
+	@PostMapping("customStrategyBuilder")
+	public ResponseEntity<PayOffResponseDto> addPosition(@RequestBody PositionRequestFormDto positionDto) {
+		PayOffResponseDto payOff = masterService.getPayOffDetail(positionDto);
+		
+		
+		return new ResponseEntity<PayOffResponseDto>(payOff, HttpStatus.OK);
+	}	
 	
+	@PostMapping("systemStrategy")
+	public ResponseEntity<List<SystemStrategyResponseFormDto>> getSystemStrategy(@RequestBody SystemStrategyRequestFormDto sysDto) {
+		
+		List<SystemStrategyResponseFormDto> responseList = masterService.getSystemStrategy(sysDto);
+		return new ResponseEntity<List<SystemStrategyResponseFormDto>>(responseList, HttpStatus.OK);
+	}	
 	
 	
 } 

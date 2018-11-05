@@ -23,6 +23,7 @@ import com.optionAlgo.form.data.FutureDetailsFormDto;
 import com.optionAlgo.form.data.FutureScripFormData;
 import com.optionAlgo.form.data.OptionPriceDetailFormDto;
 import com.optionAlgo.form.data.OptionPriceFormDto;
+import com.optionAlgo.form.data.PositionDetailDto;
 
 
 @Transactional
@@ -76,7 +77,6 @@ public class MasterDaoImpl implements MasterDao {
 		LinkedHashMap<String , FutureDetailsFormDto>futureDetailsFormDtoMap = new LinkedHashMap<>();
 		FutureDetailsFormDto fDetailDto ;
 		int index=0;
-		int count=0;
 			
 		for(Object[] obj : scipExpiryList){
 			
@@ -92,12 +92,11 @@ public class MasterDaoImpl implements MasterDao {
 			fDetailDto.setLotSize(lotsize.intValue());
 			List<OptionPriceFormDto> optionPriceList = getOptionPriceDataForAllStrikeByExpiry(scripName,fDetailDto.getExpiryDate());
 			fDetailDto.setOptionPricesList(optionPriceList);
-			futureDetailsFormDtoMap.put(count+++"", fDetailDto);
+			futureDetailsFormDtoMap.put(fDetailDto.getExpiryDate(), fDetailDto);
 			index=0;
 		}
 		
 		fs.setFutureAllExpiryMap(futureDetailsFormDtoMap);
-		fs.setFutureAllExpiryMapSize(futureDetailsFormDtoMap.size());
 		fs.setScripName(scripName);
 		return fs;
 	}
@@ -143,6 +142,112 @@ public class MasterDaoImpl implements MasterDao {
 		}
 		
 		return new ArrayList<OptionPriceFormDto>(tempMap.values()); 
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Double getCurrentPriceForPosition(PositionDetailDto po, String scripName) {
+		
+		
+		Query query =null;
+		if(po.getInstrumentType().equals("F")){
+			query = entityManager.createNativeQuery("select ltp "
+					+ "	from futurescrip where scripName ='" +scripName+"' and expiryDate = '"+ po.getExpiryDate()+"'");
+		} else{
+			 
+			query = entityManager.createNativeQuery("select ltp FROM OptionBean as ob where ob.seriesName ='"+ 
+				po.getExpiryDate()+"' and ob.scripName='"+scripName+"' and ob.optionType = '"+po.getOptionType()+  "' and ob.strikePrice = " + po.getStrikePrice());
+			
+		}
+		
+		
+		List<Object[]> scipExpiryList = query.getResultList();
+		
+		Double ltp =0.0;
+		for(Object obj : scipExpiryList){
+			ltp =Double.parseDouble(obj.toString());
+		}
+		return ltp;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Double> getStrikePriceByScripNameLimit(String scripName,int noOfStrikePrice, boolean itm, Double spotPrice,String seriesName) {
+		
+		
+		Query query =null;
+		if(itm){
+			query = entityManager.createNativeQuery("SELECT DISTINCT ob.strikePrice FROM OptionBean as ob WHERE ob.scripName = '" 
+					+scripName+"' and ob.seriesName = '"+seriesName + "' and ob.strikePrice < "+ spotPrice
+					+ " ORDER BY strikePrice DESC  LIMIT "+ noOfStrikePrice);
+		} else{
+			 
+			query = entityManager.createNativeQuery("SELECT DISTINCT ob.strikePrice FROM OptionBean as ob WHERE ob.scripName = '" 
+					+scripName+"' and ob.seriesName = '"+seriesName + "' and ob.strikePrice >= "+ spotPrice
+					+ " ORDER BY strikePrice   LIMIT "+ noOfStrikePrice);
+		}
+		
+		
+		List<Object[]> spList = query.getResultList();
+		Double sp;
+		List<Double> strikePriceList= new ArrayList<>();
+		for(Object obj : spList){
+			sp =Double.parseDouble(obj.toString());
+			strikePriceList.add(sp);
+		}
+		return strikePriceList;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public Double getSpotPriceByScrip(String scripName, String expiryDate) {
+		
+		
+		Query query =null;
+			query = entityManager.createNativeQuery("select ltp "
+					+ "	from futurescrip where scripName ='" +scripName+"' and expiryDate = '"+ expiryDate+"'");
+		
+		
+		
+		List<Object[]> scipExpiryList = query.getResultList();
+		
+		Double ltp =0.0;
+		for(Object obj : scipExpiryList){
+			ltp =Double.parseDouble(obj.toString());
+		}
+		return ltp;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, OptionBean> getOptionBeanByStrikePrice(String scripName, String expiryDate, List<Double>spList) {
+		
+		/*String strikePrice="";
+		for(Double sp :spList){
+			strikePrice=strikePrice+sp+" ,";
+		}
+		strikePrice = strikePrice.substring(0, strikePrice.length()-2);
+		Query query =null;
+			query = entityManager.createNativeQuery("select * "
+					+ "	from OptionBean where scripName ='" +scripName+"' and expiryDate = '"+ expiryDate+"' "
+							+ "and ob.strikePrice in ("+strikePrice+")");*/
+		
+		
+		
+			
+			String hql = "FROM OptionBean as ob where ob.scripName = :scrip  and ob.seriesName = :series and ob.strikePrice in (:strike)";
+			Query query =  entityManager.createQuery(hql);
+			query.setParameter("scrip", scripName);
+			query.setParameter("series", expiryDate);
+			query.setParameter("strike", spList);
+			List<OptionBean> obList = query.getResultList();
+			Map<String, OptionBean> obMap = new HashMap<>();
+			for(OptionBean ob : obList){
+				obMap.put(ob.getStrikePrice()+ob.getOptionType(), ob);
+			}
+			
+		return obMap;
 	}
 	
 	/*@Override
