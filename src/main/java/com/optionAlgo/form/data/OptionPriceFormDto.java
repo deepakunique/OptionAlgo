@@ -9,7 +9,7 @@ public class OptionPriceFormDto {
 
 	
 	Double strike;
-//	HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap = new HashMap<>();
+	HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap = new HashMap<>();
 	
 	public Double getStrike() {
 		return strike;
@@ -17,12 +17,12 @@ public class OptionPriceFormDto {
 	public void setStrike(Double strike) {
 		this.strike = strike;
 	}
-	/*public HashMap<String, OptionPriceDetailFormDto> getOptionTypePriceMap() {
+	public HashMap<String, OptionPriceDetailFormDto> getOptionTypePriceMap() {
 		return optionTypePriceMap;
 	}
 	public void setOptionTypePriceMap(HashMap<String, OptionPriceDetailFormDto> optionTypePriceMap) {
 		this.optionTypePriceMap = optionTypePriceMap;
-	}*/
+	}
 	
 	
     		  
