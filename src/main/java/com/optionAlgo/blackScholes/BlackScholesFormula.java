@@ -118,7 +118,12 @@ public class BlackScholesFormula {
 		
 		DecimalFormat df = new DecimalFormat("#.##");      
 		response.delta = Double.valueOf(df.format(greeks.delta*100.0));
-		response.gamma = Double.valueOf(df.format(greeks.gamma*100.0));
+		if(Double.isNaN(greeks.gamma)){
+			response.gamma = 0.00;
+		}else {
+			response.gamma = Double.valueOf(df.format(greeks.gamma*100.0));
+		}
+		
 		response.rho = Double.valueOf(df.format(greeks.rho*100.0));
 		response.theta = Double.valueOf(df.format(greeks.theta/365*100.0));
 		response.vega = Double.valueOf(df.format(greeks.vega));

@@ -77,7 +77,7 @@ public class MasterDaoImpl implements MasterDao {
 		LinkedHashMap<String , FutureDetailsFormDto>futureDetailsFormDtoMap = new LinkedHashMap<>();
 		FutureDetailsFormDto fDetailDto ;
 		int index=0;
-			
+		int count = 0;	
 		for(Object[] obj : scipExpiryList){
 			
 			fDetailDto = new FutureDetailsFormDto();
@@ -92,10 +92,11 @@ public class MasterDaoImpl implements MasterDao {
 			fDetailDto.setLotSize(lotsize.intValue());
 			List<OptionPriceFormDto> optionPriceList = getOptionPriceDataForAllStrikeByExpiry(scripName,fDetailDto.getExpiryDate());
 			fDetailDto.setOptionPricesList(optionPriceList);
-			futureDetailsFormDtoMap.put(fDetailDto.getExpiryDate(), fDetailDto);
+			futureDetailsFormDtoMap.put(count+"", fDetailDto);
 			index=0;
+			count++;
 		}
-		
+		fs.setFutureAllExpiryMapSize(futureDetailsFormDtoMap.size());
 		fs.setFutureAllExpiryMap(futureDetailsFormDtoMap);
 		fs.setScripName(scripName);
 		return fs;

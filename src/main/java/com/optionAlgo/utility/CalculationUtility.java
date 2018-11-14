@@ -1,5 +1,6 @@
 package com.optionAlgo.utility;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -265,10 +266,11 @@ public class CalculationUtility {
 				pnlToday = pnlToday + pnLforPositionListBySpotPrice(po,underlyingPrice);
 					
 			}
+			DecimalFormat df = new DecimalFormat("###.####");
 			chartDto.setChangePercent(changePercent);
 			chartDto.setCurrentPnL(pnlToday);
 			chartDto.setFinalPnL(pnlAtExpiry);
-			chartDto.setStockPrice(underlyingPrice);
+			chartDto.setStockPrice(Double.parseDouble(df.format(underlyingPrice)));
 			payOffChartDtoList.add(chartDto);
 			
 		}

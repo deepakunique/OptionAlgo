@@ -12,87 +12,84 @@ input.spacing{
 }
 .button1 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #00bcd4;
   border: none;
-  border-radius: 15px;
+  
   /* box-shadow: 0 9px #999; */
 }
 .button2 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #ff9800;
   border: none;
-  border-radius: 15px;
+   
   /* box-shadow: 0 9px #999; */
 }
 .button3 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #8bc34a;
   border: none;
-  border-radius: 15px;
+  
  /*  box-shadow: 0 9px #999; */
 }
 .button4 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #cddc39;
   border: none;
-  border-radius: 15px;
   /* box-shadow: 0 9px #999; */
 }
 .button5 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #9c27b0;
   border: none;
-  border-radius: 15px;
  /*  box-shadow: 0 9px #999; */
 }
 .button6 {
   padding: 15px 25px;
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
   outline: none;
   color: #fff;
   background-color: #607d8b;
   border: none;
-  border-radius: 15px;
  /*  box-shadow: 0 9px #999; */
 }
 
  .buttonFuture {
   padding: 15px 25px;
   font-size: 14px;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   outline: none;
   color: #fff;
-  background-color: gray;
+  background-color: #008CBA;
   border: none;
-  border-radius: 15px;
+  width: 200px;
 }
 
 .header {
@@ -109,7 +106,6 @@ input.spacing{
   text-decoration: none;
   font-size: 18px; 
   line-height: 80px;
-  border-radius: 4px;
 }
 
 .header a.logo {
@@ -140,4 +136,16 @@ input.spacing{
   .header-right {
     float: none;
   }
+}
+.addposition {
+  padding: 15px 25px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: gray;
+  border: none;
+  border-radius: 15px;
+  /* box-shadow: 0 9px #999; */
 }

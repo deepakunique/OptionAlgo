@@ -19,5 +19,8 @@ angular.module('demo.services', []).factory('UserService',
 			service.getArticles = function() {
 				return $http.get("/user/articles");
 			}
+			service.addPosition = function(data) {
+				return $http.post("/master/customStrategyBuilder",data);
+			}
 			return service;
 		} ]);

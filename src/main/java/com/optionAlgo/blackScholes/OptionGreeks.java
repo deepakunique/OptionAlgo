@@ -5,7 +5,7 @@ public class OptionGreeks {
 	 public double delta;
 	 public double theta;
 	 public double rho;
-	 public double gamma;
+	 public double gamma =0.0001;
 	 public double vega;
 	 
 	 public String toString() {

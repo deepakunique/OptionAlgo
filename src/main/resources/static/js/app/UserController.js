@@ -31,6 +31,7 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			$scope.optionIV ="";
 			$scope.optionPriceList =[];
 			$scope.selectedOptionStrike="";
+			$scope.showGraph = false;
 			console.log("__________________________ asdfsadf____________________");
 			UserService.getAllScripNames().then(function(value) {
 				console.log("data fetched successfully--->",value);
@@ -54,6 +55,8 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 						$scope.futurePrice=value.data.futureAllExpiryMap[i].futurePrice;
 						$scope.iv = value.data.futureAllExpiryMap[i].iv;
 						$scope.ivp=value.data.futureAllExpiryMap[i].ivp;
+						var d = new Date(value.data.futureAllExpiryMap[i].expiryDate); 
+						$scope.date = d;
 						$scope.lotSize=value.data.futureAllExpiryMap[i].lotSize;
 						$scope.selectedExpiry = value.data.futureAllExpiryMap[i].expiryDate;
 						for(var j=0;j<value.data.futureAllExpiryMap[i].optionPricesList.length;j++){
@@ -80,6 +83,8 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 							$scope.spotPrice= value.data.futureAllExpiryMap[i].spotPrice;
 							$scope.changeInOi=value.data.futureAllExpiryMap[i].changeInOi;
 							$scope.expiryDate=value.data.futureAllExpiryMap[i].expiryDate;
+							var d = new Date(value.data.futureAllExpiryMap[i].expiryDate); 
+							$scope.date = d;
 							$scope.futurePrice=value.data.futureAllExpiryMap[i].futurePrice;
 							$scope.iv = value.data.futureAllExpiryMap[i].iv;
 							$scope.ivp=value.data.futureAllExpiryMap[i].ivp;
@@ -215,6 +220,114 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 						$scope.optionPrice = 0;
 					}
 				}
+			}
+			
+			 
+			$scope.addPosition = function( ){ 
+				$scope.showGraph = false;
+				console.log('instrument value ----',$scope.selectedSegment);
+				var instrumentType = 'F';
+				var price = 0;
+				var action = '';
+				if($scope.buyOrSell == 'Buy'){
+					action = 'B';
+				}else if($scope.buyOrSell == 'Sell'){
+					action = 'S';
+				}
+				
+				if($scope.selectedSegment == 'Options'){
+					var instrumentType = 'O';
+					price = $scope.optionPrice;
+				} else{
+					price = $scope.futurePrice;
+				}
+				
+				var positionlist =[{ "instrumentType" : instrumentType,
+					  "action" : action,
+					  "entryPrice" : price,
+					  "exitPrice" : '0',
+					  "lotSize" : $scope.lotSize,
+					  "strikePrice" : $scope.selectedOptionStrike,
+					   "expiryDate" : $scope.selectedExpiry,
+					  "optionType" : $scope.selectedOptionType,
+					  "lotQty" : $scope.lotQty,
+					  "spotPrice" : $scope.spotPrice,
+					  "iv" : $scope.iv
+				}]
+				var positionRequestFormDto = { "scripName": $scope.selectedScripName,
+												"payOffDate" : $scope.date,
+												 "positionList": positionlist  };
+			 
+				console.log('obj________________',positionRequestFormDto);
+				
+				UserService.addPosition(positionRequestFormDto).then(function(value) {
+					console.log("data from add position",value);
+					$scope.chartData = [];
+					$scope.data = [];
+					$scope.maxProfit = value.data.maxProfit ;
+					$scope.maxLoss = value.data.maxLoss;
+					if(value.data.breakEven != null){
+						$scope.breakEvens = value.data.breakEven;
+					}else{
+						$scope.breakEvens = 0;
+					}
+					
+					$scope.totalPnl = value.data.pnl;
+					for(var i=0;value.data.chartDto.length>i;i++){
+						var object= {};
+						var chartObject = value.data.chartDto[i];
+						object.changePercent = parseFloat(chartObject.changePercent);
+						object.currentPnL = parseFloat(chartObject.currentPnL);
+						object.finalPnL = parseFloat(chartObject.finalPnL);
+						object.stockPrice = parseFloat(chartObject.stockPrice);
+						$scope.data.push(object);
+					}
+				 
+					console.log('data successfully uploaded---------------------',$scope.data);
+					$scope.myfunction();
+					$scope.showGraph = true;
+					
+					 
+				}, function(reason) {
+					console.log("error occured");
+				}, function(value) {
+					console.log("no callback");
+				});
+			}
+			
+			$scope.myfunction = function( ){ 
+  var mydata =  $scope.data;
+			
+			$scope.amChartOptions = {
+					  data : mydata,
+			         "type": "serial",
+    "theme": "light",
+    pathToImages: 'https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/images/',
+    "marginRight": 80,
+    
+    "valueAxes": [{
+        "position": "left",
+        "title": "Unique PnL"
+    }],
+    "categoryAxis": {
+        "parseDates": false,
+        "axisColor": "#DADADA",
+        "minorGridEnabled": true,
+        "title" : "Underleying Price"
+    },
+    "graphs": [{
+        "id": "g1",
+        "fillAlphas": 0.4,
+        "valueField": "finalPnL",
+         "balloonText": "<div style='margin:5px; font-size:12px;'><b>Change percent:[[changePercent]] , today's Pnl: [[currentPnL]] </b></div>"
+    }],
+    
+   /* "chartCursor": {
+        "categoryBalloonDateFormat": "JJ:NN, DD MMMM",
+        "cursorPosition": "mouse"
+    },*/
+    "categoryField": "stockPrice"
+			    }
 			}
 			
 		} ]);

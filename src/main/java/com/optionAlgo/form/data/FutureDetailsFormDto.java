@@ -19,10 +19,6 @@ public class FutureDetailsFormDto {
 	Double changeInOi;
 	List<OptionPriceFormDto> optionPricesList = new ArrayList<>();
 	
-	
-	
-	
-	
 	public String getExpiryDate() {
 		return expiryDate;
 	}
