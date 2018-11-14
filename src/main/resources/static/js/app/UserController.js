@@ -32,6 +32,8 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			$scope.optionPriceList =[];
 			$scope.selectedOptionStrike="";
 			$scope.showGraph = false;
+			$scope.buyOrSell ='Buy';
+			$scope.lotQty = 1;
 			console.log("__________________________ asdfsadf____________________");
 			UserService.getAllScripNames().then(function(value) {
 				console.log("data fetched successfully--->",value);
@@ -240,6 +242,9 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 					price = $scope.optionPrice;
 				} else{
 					price = $scope.futurePrice;
+				}
+				if($scope.selectedOptionStrike == ""){
+					$scope.selectedOptionStrike = 0;
 				}
 				
 				var positionlist =[{ "instrumentType" : instrumentType,
