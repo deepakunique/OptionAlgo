@@ -9,9 +9,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.optionAlgo.dao.DataDownloadDao;
 import com.optionAlgo.dao.MasterDao;
 import com.optionAlgo.entity.Expiry;
 import com.optionAlgo.entity.OptionBean;
@@ -20,14 +22,18 @@ import com.optionAlgo.form.data.FutureScripFormData;
 import com.optionAlgo.form.data.OptionPriceDetailFormDto;
 import com.optionAlgo.form.data.OptionPriceFormDto;
 import com.optionAlgo.form.data.PositionDetailDto;
+import com.optoinAlgo.utility.FutureScripDataBuilder;
+import com.optoinAlgo.utility.OptionBeanBuilder;
 
 
 @Transactional
 @Repository
-public class MasterDaoImpl implements MasterDao {
+public class DataDownloadDaoImpl implements DataDownloadDao {
 	
 	@PersistenceContext	
 	private EntityManager entityManager;
+	
+	
 	
 	
 	/*@Override
@@ -36,12 +42,29 @@ public class MasterDaoImpl implements MasterDao {
 	}*/
 	
 	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Expiry> getAllExpiries() {
-		String hql = "FROM Expiry as exp ORDER BY exp.id";
-		return (List<Expiry>) entityManager.createQuery(hql).getResultList();
+	public Map getRefreshFutureScrip() {
+		
+		Session session = entityManager.unwrap(Session.class);
+		return FutureScripDataBuilder.downloadScripDataFromNse(session);
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map getRefreshOptionBean() {
+		
+		Session session = entityManager.unwrap(Session.class);
+		return OptionBeanBuilder.fetchAllOptionBeanData(session);
+	}
+	
+	
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -73,7 +96,7 @@ public class MasterDaoImpl implements MasterDao {
 		LinkedHashMap<String , FutureDetailsFormDto>futureDetailsFormDtoMap = new LinkedHashMap<>();
 		FutureDetailsFormDto fDetailDto ;
 		int index=0;
-		int count = 0;	
+			
 		for(Object[] obj : scipExpiryList){
 			
 			fDetailDto = new FutureDetailsFormDto();
@@ -88,11 +111,10 @@ public class MasterDaoImpl implements MasterDao {
 			fDetailDto.setLotSize(lotsize.intValue());
 			List<OptionPriceFormDto> optionPriceList = getOptionPriceDataForAllStrikeByExpiry(scripName,fDetailDto.getExpiryDate());
 			fDetailDto.setOptionPricesList(optionPriceList);
-			futureDetailsFormDtoMap.put(count+"", fDetailDto);
+			futureDetailsFormDtoMap.put(fDetailDto.getExpiryDate(), fDetailDto);
 			index=0;
-			count++;
 		}
-		fs.setFutureAllExpiryMapSize(futureDetailsFormDtoMap.size());
+		
 		fs.setFutureAllExpiryMap(futureDetailsFormDtoMap);
 		fs.setScripName(scripName);
 		return fs;

@@ -71,8 +71,12 @@ public class MasterServiceImpl implements MasterService {
 		allPList.addAll(otmSPList);
 		allPList.addAll(itmSPList);
 		Map<String, OptionBean> optionBeanMap = masterDao.getOptionBeanByStrikePrice(sysDto.getScripName(), AppConstant.currentSeries, allPList);
-		return SystemStrategyGeneratorUtility.shortStraddles(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap);
-		
+		List<SystemStrategyResponseFormDto>sysList  = SystemStrategyGeneratorUtility.shortStraddles(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap);
+		sysList.addAll(SystemStrategyGeneratorUtility.shortStrangle(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap));
+		sysList.addAll(SystemStrategyGeneratorUtility.ironCondor(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap));
+		sysList.addAll(SystemStrategyGeneratorUtility.ironButterfly(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap));
+		sysList.addAll(SystemStrategyGeneratorUtility.butterfly(sysDto, itmSPList, otmSPList, atmSp, optionBeanMap));
+		return sysList;
 		
 	}
 	

@@ -8,9 +8,16 @@ public class SystemStrategyRequestFormDto {
 		Double target2;
 		String payOffDate;
 		String pricingType;
+		Integer lotSize;
 		
 		
 		
+		public Integer getLotSize() {
+			return lotSize;
+		}
+		public void setLotSize(Integer lotSize) {
+			this.lotSize = lotSize;
+		}
 		public String getPricingType() {
 			return pricingType;
 		}

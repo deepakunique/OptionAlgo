@@ -1,22 +1,27 @@
-package com.optoinAlgo.utility;
+package com.optionAlgo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class FutureScrip {
+@Embeddable
+public class FutureScrip implements Serializable {
 
-	@Id
-	@GeneratedValue
-	private int Id;
 	
+	@Id
 	private String scripName;
+	
+	@Id
+	private String expiryDate;
+	
 	private double low;
 	private  double high;
-	private String expiryDate;
+	
 	private double spotPrice;
 	private double  sd;
 	private double  iv;
@@ -41,12 +46,7 @@ public class FutureScrip {
     
     private double marginLimit;
     
-	public int getId() {
-		return Id;
-	}
-	public void setId(int id) {
-		Id = id;
-	}
+	
 	public String getScripName() {
 		return scripName;
 	}
@@ -204,7 +204,26 @@ public class FutureScrip {
 		this.marginLimit = marginLimit;
 	}
     
+    @Override
+    public boolean equals(Object obj) {
+    	// TODO Auto-generated method stub
+    	
+    	if (this == obj){
+    		return true;
+    	}
+    	if(!(obj instanceof FutureScrip)) {
+    		return false;
+    	}
+    	FutureScrip fs = (FutureScrip) obj;
+
+    	return  fs.getScripName().equals(getScripName()) &&  fs.getExpiryDate().equals(getExpiryDate());
+    }
     
+    @Override
+    public int hashCode() {
+    	// TODO Auto-generated method stub
+    	return Objects.hash(getScripName(),getExpiryDate());
+    }
 	
 	
 	

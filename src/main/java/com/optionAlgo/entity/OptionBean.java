@@ -1,132 +1,197 @@
 package com.optionAlgo.entity;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class OptionBean {
+@Embeddable
+public class OptionBean implements Serializable {
 	
+
+	
+	double oi;
+	double ChangeInOi	;
+	double volume;
+	double iv;
+	double ltp;
+	double netChng;
+	double bidQty;
+	double bidPrice;
+	double askPrice;
+	double askQty;
 	
 	@Id
-	@GeneratedValue
-	int id;
+	double strikePrice;
 	
-	Double oi;
-	Double ChangeInOi	;
-	Double volume;
-	Double iv;
-	Double ltp;
-	Double netChng;
-	Double bidQty;
-	Double bidPrice;
-	Double askPrice;
-	Double askQty;
-	Double strikePrice;
-	Double cmp;
+	double cmp;
 	
+	@Id
 	String scripName;
+	
+	@Id
 	String seriesName; 
-	String optionType;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public Double getOi() {
-		return oi;
-	}
-	public void setOi(Double oi) {
-		this.oi = oi;
-	}
-	public Double getChangeInOi() {
-		return ChangeInOi;
-	}
-	public void setChangeInOi(Double changeInOi) {
-		ChangeInOi = changeInOi;
-	}
-	public Double getVolume() {
-		return volume;
-	}
-	public void setVolume(Double volume) {
-		this.volume = volume;
-	}
-	public Double getIv() {
-		return iv;
-	}
-	public void setIv(Double iv) {
-		this.iv = iv;
-	}
-	public Double getLtp() {
-		return ltp;
-	}
-	public void setLtp(Double ltp) {
-		this.ltp = ltp;
-	}
-	public Double getNetChng() {
-		return netChng;
-	}
-	public void setNetChng(Double netChng) {
-		this.netChng = netChng;
-	}
-	public Double getBidQty() {
-		return bidQty;
-	}
-	public void setBidQty(Double bidQty) {
-		this.bidQty = bidQty;
-	}
-	public Double getBidPrice() {
-		return bidPrice;
-	}
-	public void setBidPrice(Double bidPrice) {
-		this.bidPrice = bidPrice;
-	}
-	public Double getAskPrice() {
-		return askPrice;
-	}
-	public void setAskPrice(Double askPrice) {
-		this.askPrice = askPrice;
-	}
-	public Double getAskQty() {
-		return askQty;
-	}
-	public void setAskQty(Double askQty) {
-		this.askQty = askQty;
-	}
-	public Double getStrikePrice() {
-		return strikePrice;
-	}
-	public void setStrikePrice(Double strikePrice) {
-		this.strikePrice = strikePrice;
-	}
-	public Double getCmp() {
-		return cmp;
-	}
-	public void setCmp(Double cmp) {
-		this.cmp = cmp;
-	}
-	public String getScripName() {
-		return scripName;
-	}
-	public void setScripName(String scripName) {
-		this.scripName = scripName;
-	}
+	
 	public String getSeriesName() {
 		return seriesName;
 	}
+
 	public void setSeriesName(String seriesName) {
 		this.seriesName = seriesName;
 	}
+	
+	@Id
+	String optionType;
+
+	public double getOi() {
+		return oi;
+	}
+	
+	public double getCmp() {
+		return cmp;
+	}
+
+	public void setCmp(double cmp) {
+		this.cmp = cmp;
+	}
+
+
+
+	public void setOi(double oi) {
+		this.oi = oi;
+	}
+
+	public double getChangeInOi() {
+		return ChangeInOi;
+	}
+
+	public void setChangeInOi(double changeInOi) {
+		ChangeInOi = changeInOi;
+	}
+	
+	public String getScripName() {
+		return scripName;
+	}
+
+	public void setScripName(String scripName) {
+		this.scripName = scripName;
+	}
+
+	public double getVolume() {
+		return volume;
+	}
+
+	public void setVolume(double volume) {
+		this.volume = volume;
+	}
+
+	public double getIv() {
+		return iv;
+	}
+
+	public void setIv(double iv) {
+		this.iv = iv;
+	}
+
+	public double getLtp() {
+		return ltp;
+	}
+
+	public void setLtp(double ltp) {
+		this.ltp = ltp;
+	}
+
+	public double getNetChng() {
+		return netChng;
+	}
+
+	public void setNetChng(double netChng) {
+		this.netChng = netChng;
+	}
+
+	public double getBidQty() {
+		return bidQty;
+	}
+
+	public void setBidQty(double bidQty) {
+		this.bidQty = bidQty;
+	}
+
+	public double getBidPrice() {
+		return bidPrice;
+	}
+
+	public void setBidPrice(double bidPrice) {
+		this.bidPrice = bidPrice;
+	}
+
+	public double getAskPrice() {
+		return askPrice;
+	}
+
+	public void setAskPrice(double askPrice) {
+		this.askPrice = askPrice;
+	}
+
+	public double getAskQty() {
+		return askQty;
+	}
+
+	public void setAskQty(double askQty) {
+		this.askQty = askQty;
+	}
+
+	public double getStrikePrice() {
+		return strikePrice;
+	}
+
+	public void setStrikePrice(double strikePrice) {
+		this.strikePrice = strikePrice;
+	}
+
 	public String getOptionType() {
 		return optionType;
 	}
+
 	public void setOptionType(String optionType) {
 		this.optionType = optionType;
 	}
+	
+	/*bidQty
+	bidPrice
+	askPrice
+	askQty
+	netChng
+	LTP	
+	IV
+	Volume
+	ChnginOI
+	OI*/
+	
+	@Override
+    public boolean equals(Object obj) {
+    	// TODO Auto-generated method stub
+    	
+    	if (this == obj){
+    		return true;
+    	}
+    	if(!(obj instanceof OptionBean)) {
+    		return false;
+    	}
+    	OptionBean fs = (OptionBean) obj;
 
-	
-		
-	
+    	return  fs.getScripName().equals(getScripName()) &&  fs.getSeriesName().equals(getSeriesName()) 
+    			&& fs.getOptionType().equals(getOptionType()) && (fs.getStrikePrice() == getStrikePrice());
+    }
+    
+    @Override
+    public int hashCode() {
+    	// TODO Auto-generated method stub
+    	return Objects.hash(getScripName(),getSeriesName(), getOptionType(),getStrikePrice());
+    }
 
 }
