@@ -47,11 +47,11 @@
           <br></br><br></br> 
           
          <table ><tr>
-       <td><b> <b>Select Segment :</b> </td><td> <td><select ng-model="selectedSegment" ng-options="x for x in allsegments"></select></td>
-         <td>  <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Expiry :</b> </td><td> <select ng-model="selectedExpiry" ng-options="expiry for expiry in expiryDateList"  ng-change="getPriceDetailsByExpiryDate(this.selectedExpiry)"></select>
+       <td><b> <b>Select Segment :</b> </td><td> <td><select style=" width: 80px;" ng-model="selectedSegment" ng-options="x for x in allsegments"></select></td>
+         <td>  <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Expiry :</b> </td><td> <select style=" width: 120px;" ng-model="selectedExpiry" ng-options="expiry for expiry in expiryDateList"  ng-change="getPriceDetailsByExpiryDate(this.selectedExpiry)"></select>
          </td>
-          <td ng-if="selectedSegment =='Options'"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select Option Type :</b> </td><td ng-if="selectedSegment =='Options'"> <select ng-model="selectedOptionType" ng-options="x for x in optionTypes"   ng-change="getOptionPriceByOptionType(this.selectedOptionType)" ></select></td>
-           <td ng-if="selectedSegment =='Options'"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select Option Strike :</b> </td><td ng-if="selectedSegment =='Options'"> <select ng-model="selectedOptionStrike" ng-options="x for x in strikeOptions"  ng-change="getSelectedStrikePriceDetails(this.selectedOptionStrike)" ></select></td>
+          <td ng-if="selectedSegment =='Options'"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select Option Type :</b> </td><td ng-if="selectedSegment =='Options'"> <select style=" width: 60px;" ng-model="selectedOptionType" ng-options="x for x in optionTypes"   ng-change="getOptionPriceByOptionType(this.selectedOptionType)" ></select></td>
+           <td ng-if="selectedSegment =='Options'"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Select Option Strike :</b> </td><td ng-if="selectedSegment =='Options'"> <select  style=" width: 70px;" ng-model="selectedOptionStrike" ng-options="x for x in strikeOptions"  ng-change="getSelectedStrikePriceDetails(this.selectedOptionStrike)" ></select></td>
          </tr> 
          </table>
          <table>

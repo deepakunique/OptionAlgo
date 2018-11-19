@@ -1,5 +1,6 @@
 'use strict'
 
+
 var module = angular.module('demo.controllers', []);
 module.controller("UserController", [ "$scope","$rootScope", "UserService",
 		function($scope, $rootScope, UserService) {
@@ -34,6 +35,7 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			$scope.showGraph = false;
 			$scope.buyOrSell ='Buy';
 			$scope.lotQty = 1;
+			$scope.positionlist = [];
 			console.log("__________________________ asdfsadf____________________");
 			UserService.getAllScripNames().then(function(value) {
 				console.log("data fetched successfully--->",value);
@@ -72,13 +74,25 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			}, function(value) {
 				console.log("no callback");
 			});
+			
+			$scope.tab = 1;
+
+		    $scope.setTab = function(newTab){
+		      $scope.tab = newTab;
+		    };
+
+		    $scope.isSet = function(tabNum){
+		      return $scope.tab === tabNum;
+		    };
 			 
 			$scope.getSelectedScripDetails = function() {
 				$scope.expiryDateList = [];
 				$scope.previousSelectedExpiryDate =  angular.copy($scope.selectedExpiry);
+				$scope.showGraph = false;
 				UserService.getSelectedScripDetails($scope.selectedScripName).then(function(value) {
 					 $scope.futureAllExpiryMap =   value.data.futureAllExpiryMap;
 					console.log("getSelectedScripDetails  details==>",value.data);
+					$scope.positionlist = [];
 					for(var i=0;i<value.data.futureAllExpiryMapSize;i++){
 						$scope.expiryDateList.push(value.data.futureAllExpiryMap[i].expiryDate);
 						if(i==0){
@@ -247,21 +261,22 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 					$scope.selectedOptionStrike = 0;
 				}
 				
-				var positionlist =[{ "instrumentType" : instrumentType,
-					  "action" : action,
-					  "entryPrice" : price,
-					  "exitPrice" : '0',
-					  "lotSize" : $scope.lotSize,
-					  "strikePrice" : $scope.selectedOptionStrike,
-					   "expiryDate" : $scope.selectedExpiry,
-					  "optionType" : $scope.selectedOptionType,
-					  "lotQty" : $scope.lotQty,
-					  "spotPrice" : $scope.spotPrice,
-					  "iv" : $scope.iv
-				}]
+				var obj = { "instrumentType" : instrumentType,
+						  "action" : action,
+						  "entryPrice" : price,
+						  "exitPrice" : '0',
+						  "lotSize" : $scope.lotSize,
+						  "strikePrice" : $scope.selectedOptionStrike,
+						   "expiryDate" : $scope.selectedExpiry,
+						  "optionType" : $scope.selectedOptionType,
+						  "lotQty" : $scope.lotQty,
+						  "spotPrice" : $scope.spotPrice,
+						  "iv" : $scope.iv
+					}
+				$scope.positionlist.push(obj);
 				var positionRequestFormDto = { "scripName": $scope.selectedScripName,
 												"payOffDate" : $scope.date,
-												 "positionList": positionlist  };
+												 "positionList": $scope.positionlist  };
 			 
 				console.log('obj________________',positionRequestFormDto);
 				
@@ -287,7 +302,13 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 						object.stockPrice = parseFloat(chartObject.stockPrice);
 						$scope.data.push(object);
 					}
-				 
+					
+					$scope.greek = value.data.greekDto;
+					$scope.pnl = value.data.pnlDto;
+					$scope.positionList = [];
+					for(var i=0;$scope.pnl.length-1>i;i++){
+						$scope.positionList.push($scope.pnl[i]);
+					}
 					console.log('data successfully uploaded---------------------',$scope.data);
 					$scope.myfunction();
 					$scope.showGraph = true;
@@ -335,4 +356,52 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			    }
 			}
 			
-		} ]);
+		} ]).
+directive('tabs', function() {
+  return {
+    restrict: 'E',
+    transclude: true,
+    scope: {},
+    controller: [ "$scope", function($scope) {
+      var panes = $scope.panes = [];
+
+      $scope.select = function(pane) {
+        angular.forEach(panes, function(pane) {
+          pane.selected = false;
+        });
+        pane.selected = true;
+      }
+
+      this.addPane = function(pane) {
+        if (panes.length == 0) $scope.select(pane);
+        panes.push(pane);
+      }
+    }],
+    template:
+      '<div class="tabbable">' +
+        '<ul class="nav nav-tabs">' +
+          '<li ng-repeat="pane in panes" ng-class="{active:pane.selected}">'+
+            '<a href="" ng-click="select(pane)">{{pane.title}}</a>' +
+          '</li>' +
+        '</ul>' +
+        '<div class="tab-content" ng-transclude></div>' +
+      '</div>',
+    replace: true
+  };
+}).
+directive('pane', function() {
+  return {
+    require: '^tabs',
+    restrict: 'E',
+    transclude: true,
+    scope: { title: '@' },
+    link: function(scope, element, attrs, tabsCtrl) {
+      tabsCtrl.addPane(scope);
+    },
+    template:
+      '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' +
+      '</div>',
+    replace: true
+  };
+})
+
