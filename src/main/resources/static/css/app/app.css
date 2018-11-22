@@ -171,5 +171,19 @@ input.spacing{
   border-radius: 15px;
   /* box-shadow: 0 9px #999; */
 }
-
+.searchStrategies {
+  padding: 15px 25px;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: gray;
+  border: none;
+  border-radius: 15px;
+  /* box-shadow: 0 9px #999; */
+}
+table, th, td {
+   border: 1px solid black;
+}
 

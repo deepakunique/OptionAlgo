@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+ <!-- Styles -->
+<style>
+#chartdiv {
+	width	: 100%;
+	height	: 500px;
+}												
+</style>
+
+<!-- Resources -->
+
+
+ 
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Main Page</title>
+</head>
+<body  >
+<div ng-controller="UserController" >
+   
+         <table><tr>
+       <td><b>Stock Name :</b> </td><td> <select ng-model="selectedStockName" ng-options="x for x in allScripNames"  ></select></td> 
+      
+      <td>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> View :</b></td><td><select ng-model="selectedView" ng-options="x for x in view" ng-change="onViewChange(this.selectedView)"></select><td> </td>
+   <td ng-if="!showRange"> <b>  &nbsp;&nbsp; &nbsp;&nbsp;  INFY Target:  &nbsp;&nbsp; &nbsp;&nbsp;</b></td> <td ng-show="!showRange">   <input  style=" width: 120px;"  ng-model="lwb"   type="number" ></input> </td>  
+   </tr>
+   <tr><td>&nbsp;</td><tr>
+   <tr>
+    <td ng-if="showRange"> <b> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Lower Bound:  &nbsp;&nbsp; &nbsp;&nbsp;</b></td> <td ng-show="showRange">    <input   style=" width: 120px;" ng-model="lwb"   type="number" ></input></td>
+     <td ng-if="showRange"> <b> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Upper Bound:  &nbsp;&nbsp; &nbsp;&nbsp;</b></td> <td ng-show="showRange">  <input  style=" width: 120px;"  ng-model="upb"  type="number" ></input></td>
+     <td>
+     <b> Target Date:</b> </td><td> <input ng-model="targetDate" type="date"/></td>
+     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Pricing:</b> &nbsp;&nbsp;   <input type="radio" ng-model="ltpOrBid" value="ltp"/><b>LTP</b>   <label>
+   		&nbsp;&nbsp; <input type="radio" ng-model="ltpOrBid" value="bid"/> <b>  Bid/Ask </b>   </td>
+    </tr>
+   <tr><td>&nbsp;</td></tr> 
+   <tr>   <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button ng-click="searchStrategies()" class="searchStrategies">GO</button></td></tr>
+      </table>
+    
+ </div>
+
+  
+</body>
+<script src="js/lib/angular.min.js"></script>
+<script src="js/lib/angular-datepicker.js"></script>
+<script src="js/lib/angular-datepicker.css"></script>
+<script src="js/lib/ui-bootstrap-tpls-2.5.0.min.js"></script>
+<script src="js/app/app.js"></script>
+<script src="js/app/UserController.js"></script>
+<script src="js/app/UserService.js"></script>
+<link rel="stylesheet" href="css/lib/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/app/app.css"/>
+ <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="js/lib/amcharts.js"></script>
+<script src="js/lib/serial.js"></script>
+<script src="js/lib/amChartsDirective.js"></script>
+</html>

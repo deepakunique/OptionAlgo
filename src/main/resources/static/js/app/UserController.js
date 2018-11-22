@@ -36,6 +36,11 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 			$scope.buyOrSell ='Buy';
 			$scope.lotQty = 1;
 			$scope.positionlist = [];
+			$scope.showRange = false; 
+			$scope.showOptionStrategies = false;
+			$scope.view = ['NOT ABOVE','ABOVE' , 'BETWEEN','BELOW','NOT BELOW'];
+			$scope.ltpOrBid ="ltp";
+			 
 			console.log("__________________________ asdfsadf____________________");
 			UserService.getAllScripNames().then(function(value) {
 				console.log("data fetched successfully--->",value);
@@ -320,6 +325,57 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 					console.log("no callback");
 				});
 			}
+			$scope.getOpenStategies = function( data){ 
+				$scope.showOptionStrategies = true;
+				$scope.lwb =$scope.spotPrice;
+			 	var d = new Date($scope.futureAllExpiryMap[0].expiryDate); 
+				$scope.targetDate  = d;
+				$scope.selectedStockName = $scope.selectedScripName;
+						 
+				if(data == 'home'){
+					$scope.showOptionStrategies = false;
+				} 
+			}
+			
+			
+			$scope.searchStrategies = function(){ 
+				
+				 var target2 = 0;
+				 if($scope.upb){
+					 target2 = $scope.upb;
+				 }
+				 console.log('asdfasdf===',$scope.selectedView,'-----',target2);
+				var SystemStrategyRequestFormDto = {
+						"scripName" : $scope.selectedStockName,
+						"view" : $scope.selectedView,
+						"target1" : $scope.lwb,
+						"target2" : target2,
+						"payOffDate" : $scope.targetDate,
+						"pricingType" : $scope.ltpOrBid,
+						"lotSize" : '0'
+				};
+				UserService.searchStrategies(SystemStrategyRequestFormDto).then(function(value) {
+					console.log('option strategies result --->',value.data);
+				}, function(reason) {
+					console.log("error occured");
+				}, function(value) {
+					console.log("no callback");
+				});
+			}
+			
+			 
+			$scope.onViewChange = function( value){ 
+			  if(value == 'BETWEEN'){
+				  $scope.showRange = true;
+				  
+			  }else{
+				  $scope.showRange = false; 
+			  }
+			 
+			}
+			
+			
+		 
 			
 			$scope.myfunction = function( ){ 
   var mydata =  $scope.data;

@@ -22,5 +22,8 @@ angular.module('demo.services', []).factory('UserService',
 			service.addPosition = function(data) {
 				return $http.post("/master/customStrategyBuilder",data);
 			}
+			service.searchStrategies = function(data) {
+				return $http.post("/master/systemStrategy",data);
+			}
 			return service;
 		} ]);
