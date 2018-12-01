@@ -76,7 +76,7 @@ public class OptionBeanBuilder
 				StringTokenizer st = new StringTokenizer(scripLot,"|");
 				String scripName = st.nextToken();
 				int lotSize = Integer.parseInt(st.nextToken());
-				getScripSeriesData(s, scripName, AppConstant.currentSeries, AppConstant.nextSeries, lotSize,failedScrip);
+				getScripSeriesData(s, scripName, AppConstant.currentSeries, AppConstant.nextSeries, failedScrip);
 				successScrip.add(scripName);
 			}
 			catch(Exception e){
@@ -95,7 +95,7 @@ public class OptionBeanBuilder
 				StringTokenizer st = new StringTokenizer(itr.next(),"|");
 				String scripName = st.nextToken();
 				int lotSize = Integer.parseInt(st.nextToken());
-				getScripSeriesData(s, scripName, AppConstant.currentSeries, AppConstant.nextSeries, lotSize,failedScrip);
+				getScripSeriesData(s, scripName, AppConstant.currentSeries, AppConstant.nextSeries, failedScrip);
 				itr.remove();
 			}
 			catch(Exception e){
@@ -107,13 +107,25 @@ public class OptionBeanBuilder
 		return outCome;
 	}
 
+	public static boolean fetchOptionBeanDataByScripName(Session s, String scripName) {
+
+		boolean result = false;
+			try{
+				getScripSeriesData(s, scripName, AppConstant.currentSeries, AppConstant.nextSeries, null);
+				result = true;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		return result;
+	}
     
     
     
     
 
 	private static void getScripSeriesData(Session s, String scripName, final String currentSeries,
-			final String nextSeries, final int lotSize, List<String> failedScrip) throws Exception {
+			final String nextSeries,List<String> failedScrip) throws Exception {
 		
 		Set<Double> strikePriceSet = new HashSet<Double>();
 		Map<String, Map<String, OptionBean>> obMap = new HashMap<String, Map<String, OptionBean>>();
@@ -130,18 +142,18 @@ public class OptionBeanBuilder
 				instrumentType = "OPTIDX";
 			}
 			getURLAction(sb, AppConstant.charset,currentSeries,scripName, instrumentType);
-			persistOptionBean(s, sb, currentSeries, obMap,strikePriceSet,lotSize);
+			persistOptionBean(s, sb, currentSeries, obMap,strikePriceSet);
 			
 			sb= new StringBuffer();
 			getURLAction(sb, AppConstant.charset,nextSeries,scripName,instrumentType);
-			persistOptionBean(s, sb, nextSeries, obMap,strikePriceSet,lotSize);
+			persistOptionBean(s, sb, nextSeries, obMap,strikePriceSet);
 			t.commit();
 			
 			
 		} catch(Exception e){
 			
 			e.printStackTrace();
-			failedScrip.add(scripName+"|"+lotSize);
+			failedScrip.add(scripName);
 			t.rollback();
 			throw e;
 		}
@@ -150,7 +162,7 @@ public class OptionBeanBuilder
 	}
 
 	public static void persistOptionBean(Session s, StringBuffer sb, String seriesName,
-			Map<String, Map<String, OptionBean>> obMap,Set<Double> strikePriceLSet,int lotSize) {
+			Map<String, Map<String, OptionBean>> obMap,Set<Double> strikePriceLSet) {
 		Transaction t;
 		org.jsoup.nodes.Document document = Jsoup.parse(sb.toString());
 		org.jsoup.nodes.Element tableCMP = document.select("table").get(0);

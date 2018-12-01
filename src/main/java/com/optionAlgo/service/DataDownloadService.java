@@ -10,6 +10,8 @@ public interface DataDownloadService {
 
 	Map getAllOptionChainRefresh();
 
+	boolean getRefreshDataByScripName(String scripName);
+
 	
 	
 }
