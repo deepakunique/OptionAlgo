@@ -92,19 +92,9 @@ public class FutureScripDataBuilder
 	}
 
     
-	public static boolean downloadScripDataFromNseByScripName(Session s,String scripName) {
-		boolean result = false;
-		try{
-				getScripSeriesData(s, scripName, AppConstant.currentSeries,null);
-				getScripSeriesData(s, scripName, AppConstant.nextSeries,null);
-				result = true;
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-		
-		return result;
-	}
+    
+    
+    
 
     public static void getURLAction(StringBuffer sb, String charset,String series, String scripName, String instrumentType) throws Exception {
 		URLConnection connection;

@@ -29,7 +29,5 @@ public interface DataDownloadDao {
 	Map<String, OptionBean> getOptionBeanByStrikePrice(String scripName, String expiryDate, List<Double> spList);
 
 	Map getRefreshOptionBean();
-
-	boolean getRefreshFutureByScripName(String scripName);
 }
  

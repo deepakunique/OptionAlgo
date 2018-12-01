@@ -53,16 +53,6 @@ public class DataDownloadDaoImpl implements DataDownloadDao {
 		return FutureScripDataBuilder.downloadScripDataFromNse(session);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean getRefreshFutureByScripName(String scripName) {
-		
-		Session session = entityManager.unwrap(Session.class);
-		boolean result = FutureScripDataBuilder.downloadScripDataFromNseByScripName(session, scripName);
-		result = OptionBeanBuilder.fetchOptionBeanDataByScripName(session,scripName);
-		return result;
-	}
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override

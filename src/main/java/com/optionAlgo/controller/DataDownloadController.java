@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.optionAlgo.entity.Article;
 import com.optionAlgo.service.DataDownloadService;
 import com.optionAlgo.service.MasterService;
 
@@ -40,12 +38,12 @@ public class DataDownloadController {
 	}
 	
 	
-	@GetMapping("refreshFuture/{scripName}")
-	public ResponseEntity<Boolean> downloadFutueDataByScripName(@PathVariable("scripName") String scripName) {
-		boolean outCome  = dataDownloadService.getRefreshDataByScripName(scripName);
-		return new ResponseEntity<Boolean>(outCome, HttpStatus.OK);
-	}
 	
+	@GetMapping("scripnames")
+	public ResponseEntity<List> getScripNames() {
+		List<String> scripNames = masterService.getAllScripNames();
+		return new ResponseEntity<List>(scripNames, HttpStatus.OK);
+	}
 	
 	
 	

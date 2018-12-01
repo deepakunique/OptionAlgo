@@ -31,11 +31,7 @@ public class DataDownloadServiceImpl implements DataDownloadService {
 		return dataDownloadDao.getRefreshOptionBean();
 	}
 
-	@Override
-	public boolean getRefreshDataByScripName(String scripName) {
-		// TODO Auto-generated method stub
-		return dataDownloadDao.getRefreshFutureByScripName(scripName);
-	}
+	
 
 	
 }
