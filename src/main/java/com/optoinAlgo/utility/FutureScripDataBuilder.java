@@ -91,7 +91,19 @@ public class FutureScripDataBuilder
 		return outCome;
 	}
 
-    
+	public static boolean downloadScripDataFromNseByScripName(Session s,String scripName) {
+		boolean result = false;
+		try{
+				getScripSeriesData(s, scripName, AppConstant.currentSeries,null);
+				getScripSeriesData(s, scripName, AppConstant.nextSeries,null);
+				result = true;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		
+		return result;
+	}
     
     
     

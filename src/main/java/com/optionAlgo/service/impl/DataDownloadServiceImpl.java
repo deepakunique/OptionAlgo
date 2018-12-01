@@ -32,6 +32,10 @@ public class DataDownloadServiceImpl implements DataDownloadService {
 	}
 
 	
-
+	@Override
+	public boolean getRefreshDataByScripName(String scripName) {
+		// TODO Auto-generated method stub
+		return dataDownloadDao.getRefreshFutureByScripName(scripName);
+	}
 	
 }

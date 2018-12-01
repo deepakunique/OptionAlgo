@@ -292,4 +292,14 @@ public class DataDownloadDaoImpl implements DataDownloadDao {
 		              .setParameter(2, category).getResultList().size();
 		return count > 0 ? true : false;
 	}*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean getRefreshFutureByScripName(String scripName) {
+		
+		Session session = entityManager.unwrap(Session.class);
+		boolean result = FutureScripDataBuilder.downloadScripDataFromNseByScripName(session, scripName);
+		result = OptionBeanBuilder.fetchOptionBeanDataByScripName(session,scripName);
+		return result;
+	}
 }

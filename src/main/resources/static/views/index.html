@@ -11,6 +11,8 @@
 <!-- Resources -->
 
 
+ <script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="946965016882-8573sq3n7b5jheo796mc0d6qaqa8trll.apps.googleusercontent.com">
  
 
 <head>
@@ -29,7 +31,7 @@
   </div></div>
   <br></br>
 <div class="container"  >
-    
+ <div class="g-signin2" data-onsuccess="onSignIn"></div>   
     
        <div ng-if="!showOptionStrategies">
        <table><tr>
