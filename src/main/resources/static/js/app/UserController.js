@@ -11,6 +11,7 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 				skillDtos : []
 			};
 			$scope.skills = [];
+			$scope.showStrategies = false; 
 			$scope.articles =[];
 			$scope.allScripNames =[];
 			$scope.selectedScripName = "ACC";
@@ -340,16 +341,22 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 				$scope.lwb =$scope.spotPrice;
 			 	var d = new Date($scope.futureAllExpiryMap[0].expiryDate); 
 				$scope.targetDate  = d;
-				$scope.selectedStockName = $scope.selectedScripName;
+				 
 						 
 				if(data == 'home'){
 					$scope.showOptionStrategies = false;
-				} 
+					if($scope.selectedScripName != $scope.selectedStockName){
+						$scope.selectedScripName = $scope.selectedStockName;
+						$scope.getSelectedScripDetails();
+					}
+				} else{
+					 $scope.selectedStockName = $scope.selectedScripName;
+				}
 			}
 			
 			
 			$scope.searchStrategies = function(){ 
-				
+				$scope.showStrategies = false; 
 				 var target2 = 0;
 				 if($scope.upb){
 					 target2 = $scope.upb;
@@ -366,6 +373,8 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 				};
 				UserService.searchStrategies(SystemStrategyRequestFormDto).then(function(value) {
 					console.log('option strategies result --->',value.data);
+					$scope.showStrategies = true; 
+					$scope.searchStrategiesData = value.data;
 				}, function(reason) {
 					console.log("error occured");
 				}, function(value) {
@@ -373,6 +382,83 @@ module.controller("UserController", [ "$scope","$rootScope", "UserService",
 				});
 			}
 			
+			
+			$scope.searchStockScripByName = function(selectedStockName) {
+				$scope.expiryDateList = [];
+				$scope.selectedStockName =  selectedStockName;
+				$scope.previousSelectedExpiryDate =  angular.copy($scope.selectedExpiry);
+				$scope.showGraph = false;
+				 
+				 if($scope.selectedView == 'BETWEEN'){
+					  $scope.showRange = true;
+					  
+				  }
+				UserService.getSelectedScripDetails($scope.selectedStockName).then(function(value) {
+					 $scope.futureAllExpiryMap =   value.data.futureAllExpiryMap;
+					console.log("getSelectedScripDetails  details==>",value.data);
+					$scope.positionlist = [];
+					for(var i=0;i<value.data.futureAllExpiryMapSize;i++){
+						$scope.expiryDateList.push(value.data.futureAllExpiryMap[i].expiryDate);
+						if(i==0){
+							$scope.spotPrice= value.data.futureAllExpiryMap[i].spotPrice;
+							$scope.lwb =$scope.spotPrice;
+							$scope.changeInOi=value.data.futureAllExpiryMap[i].changeInOi;
+							$scope.expiryDate=value.data.futureAllExpiryMap[i].expiryDate;
+							var d = new Date(value.data.futureAllExpiryMap[i].expiryDate); 
+							$scope.date = d;
+							$scope.futurePrice=value.data.futureAllExpiryMap[i].futurePrice;
+							$scope.iv = value.data.futureAllExpiryMap[i].iv;
+							$scope.ivp=value.data.futureAllExpiryMap[i].ivp;
+							$scope.lotSize=value.data.futureAllExpiryMap[i].lotSize;
+							if($scope.previousSelectedExpiryDate == ""){
+								$scope.previousSelectedExpiryDate = value.data.futureAllExpiryMap[i].expiryDate;
+							}
+						}
+					}
+					
+					//new code start 
+					
+					for(var i=0;i<$scope.expiryDateList.length;i++){
+						if($scope.futureAllExpiryMap[i].expiryDate == $scope.previousSelectedExpiryDate){
+							$scope.optionPriceList = [];
+							$scope.strikeOptions = [];
+							$scope.spotPrice= $scope.futureAllExpiryMap[i].spotPrice;
+							$scope.changeInOi=$scope.futureAllExpiryMap[i].changeInOi;
+							$scope.expiryDate=$scope.futureAllExpiryMap[i].expiryDate;
+							$scope.futurePrice=$scope.futureAllExpiryMap[i].futurePrice;
+							$scope.iv = $scope.futureAllExpiryMap[i].iv;
+							$scope.ivp = $scope.futureAllExpiryMap[i].ivp;
+							$scope.lotSize = $scope.futureAllExpiryMap[i].lotSize;
+							$scope.selectedExpiry = $scope.futureAllExpiryMap[i].expiryDate;
+							for(var j=0;j<$scope.futureAllExpiryMap[i].optionPricesList.length;j++){
+								$scope.strikeOptions.push($scope.futureAllExpiryMap[i].optionPricesList[j].strike);
+								$scope.optionPriceList.push($scope.futureAllExpiryMap[i].optionPricesList[j]);
+							}
+						}
+					}
+					for(var i=0;i<$scope.optionPriceList.length;i++){
+						if($scope.optionPriceList[i].strike == $scope.selectedOptionStrike){
+							console.log($scope.optionPriceList[i].optionTypePriceMap.CE.price,"______on stock index change_______",$scope.optionPriceList[i].optionTypePriceMap.CE.iv);
+							if($scope.selectedOptionType == "CE"){
+								$scope.optionIV = $scope.optionPriceList[i].optionTypePriceMap.CE.iv;
+								$scope.optionPrice = $scope.optionPriceList[i].optionTypePriceMap.CE.price;
+							}else{
+								$scope.optionIV = $scope.optionPriceList[i].optionTypePriceMap.PE.iv;
+								$scope.optionPrice = $scope.optionPriceList[i].optionTypePriceMap.PE.price;
+							}
+							break;
+						}else{
+							$scope.optionIV = 0;
+							$scope.optionPrice = 0;
+						}
+					}
+					//end
+				}, function(reason) {
+					console.log("error occured");
+				}, function(value) {
+					console.log("no callback");
+				});
+			}
 			 
 			$scope.onViewChange = function( value){ 
 			  if(value == 'BETWEEN'){

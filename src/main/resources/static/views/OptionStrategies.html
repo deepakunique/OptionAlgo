@@ -20,11 +20,11 @@
 <body  >
 <div ng-controller="UserController" >
    
-         <table><tr>
-       <td><b>Stock Name :</b> </td><td> <select ng-model="selectedStockName" ng-options="x for x in allScripNames"  ></select></td> 
+         <table ><tr>
+       <td><b>Stock Name :</b> </td><td> <select ng-model="selectedStockName" ng-options="x for x in allScripNames"  ng-change="searchStockScripByName(this.selectedStockName)"></select></td> 
       
       <td>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> View :</b></td><td><select ng-model="selectedView" ng-options="x for x in view" ng-change="onViewChange(this.selectedView)"></select><td> </td>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b> View : </b>&nbsp;&nbsp;<select ng-model="selectedView" ng-options="x for x in view" ng-change="onViewChange(this.selectedView)"></select><td> </td>
    <td ng-if="!showRange"> <b>  &nbsp;&nbsp; &nbsp;&nbsp;  INFY Target:  &nbsp;&nbsp; &nbsp;&nbsp;</b></td> <td ng-show="!showRange">   <input  style=" width: 120px;"  ng-model="lwb"   type="number" ></input> </td>  
    </tr>
    <tr><td>&nbsp;</td><tr>
@@ -37,9 +37,31 @@
    		&nbsp;&nbsp; <input type="radio" ng-model="ltpOrBid" value="bid"/> <b>  Bid/Ask </b>   </td>
     </tr>
    <tr><td>&nbsp;</td></tr> 
-   <tr>   <td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button ng-click="searchStrategies()" class="searchStrategies">GO</button></td></tr>
+   <tr>   <td colspan="4" style="margin-left: 200px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button ng-click="searchStrategies()" class="searchStrategies">GO</button></td></tr>
       </table>
+    <br></br>
+    <br></br>
+    <br></br>
     
+    <div ng-show="showStrategies">
+    <table width="100%"   class="table table-bordered">
+    <tr >
+		<th style="text-align: center;"> Max Loss</th>
+		<th  style="text-align: center;"> Max Profit</th>
+		<th  style="text-align: center;">Position</th>
+		<th  style="text-align: center;">Strategy</th>
+		<th  style="text-align: center;">Max ROC</th>
+		<th  style="text-align: center;">Max Margin</th>
+	</tr>
+    	<tr ng-repeat="x in searchStrategiesData">
+			<td>{{x.maxLoss}}</td>
+			<td>{{x.maxProfit}}</td>
+			<td>{{x.position}}</td>
+			<td>{{x.strategy}}</td>
+			<td>{{x.maxROC}}</td>
+			<td>{{x.margin}}</td>
+		</tr></table>
+    </div>
  </div>
 
   
